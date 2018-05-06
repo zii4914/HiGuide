@@ -12,6 +12,7 @@ import com.zii.higuide.GuideUtils;
 import com.zii.higuide.HiGuide;
 import com.zii.higuide.Overlay;
 import com.zii.higuide.Overlay.Tips;
+import com.zii.higuide.Overlay.Tips.Margin;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         })
         .nextOverLay(new Overlay().addHightLight(mBtn1, null, HiGuide.SHAPE_RECT, null))
         .nextOverLay(new Overlay()
-            .addHightLight(mBtn2, new int[]{dp2px(8), dp2px(8)}, HiGuide.SHAPE_RECT, null)
+            .addHightLight(mBtn2, new int[]{dp2px(8), dp2px(8)}, HiGuide.SHAPE_RECT,
+                new Tips(R.layout.layout_tips, Tips.TO_LEFT_OF, Tips.ALIGN_BOTTOM, null))
             .addHightLightClickListener(new OnClickListener() {
               @Override
               public void onClick(View v) {
@@ -51,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
             }).bgColor(Color.parseColor("#8000ffff")))
         .nextOverLay(new Overlay()
             .addHightLight(mBtn3, new int[]{dp2px(16), dp2px(16)}, HiGuide.SHAPE_OVAL,
-                new Tips(R.layout.layout_tips, 0, 0, dp2px(180), dp2px(148))))
+                new Tips(R.layout.layout_tips, Tips.TO_LEFT_OF, Tips.ALIGN_TOP,
+                    new Margin(0, dp2px(28), 0, dp2px(28)))))
         .show();
 
   }

@@ -2,7 +2,9 @@ package com.zii.higuide;
 
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,20 +144,66 @@ public class Overlay {
 
   public static class Tips {
 
-    public int leftMargin;
-    public int topMargin;
-    public int bottomMargin;
-    public int rightMargin;
-    public int layoutRes;
+    public static final int TO_RIGHT_OF = 1;
+    public static final int TO_LEFT_OF = 2;
+    public static final int ALIGN_TOP = 3;
+    public static final int ALIGN_BOTTOM = 4;
 
-    public Tips(@LayoutRes int layoutRes, int leftMargin, int topMargin, int rightMargin,
-        int bottomMargin) {
-      this.layoutRes = layoutRes;
-      this.leftMargin = leftMargin;
-      this.topMargin = topMargin;
-      this.bottomMargin = bottomMargin;
-      this.rightMargin = rightMargin;
+    @IntDef({TO_RIGHT_OF, TO_LEFT_OF})
+    @interface To {
+
     }
+
+    @IntDef({ALIGN_TOP, ALIGN_BOTTOM})
+    @interface Align {
+
+    }
+
+    public static class Margin {
+
+      public int left;
+      public int top;
+      public int bottom;
+      public int right;
+
+      public Margin(int left, int top, int bottom, int right) {
+        this.left = left;
+        this.top = top;
+        this.bottom = bottom;
+        this.right = right;
+      }
+    }
+
+    @LayoutRes
+    public int layoutRes = -1;
+    @To
+    public int to;
+    @Align
+    public int align;
+    public Margin margin;
+
+    public Tips(int layoutRes) {
+      this.layoutRes = layoutRes;
+    }
+
+    public Tips(@LayoutRes int layoutRes, @Nullable Margin margin) {
+      this.layoutRes = layoutRes;
+      this.margin = margin;
+    }
+
+    public Tips(@LayoutRes int layoutRes, @To int to, @Align int align) {
+      this.layoutRes = layoutRes;
+      this.to = to;
+      this.align = align;
+    }
+
+    public Tips(@LayoutRes int layoutRes, @To int to, @Align int align, @Nullable Margin margin) {
+      this.layoutRes = layoutRes;
+      this.to = to;
+      this.align = align;
+      this.margin = margin;
+    }
+
   }
 
 }

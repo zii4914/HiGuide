@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Build;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.zii.higuide.Overlay.HightLight;
 import com.zii.higuide.Overlay.Tips;
+import com.zii.higuide.Overlay.Tips.Margin;
 
 /**
  * Create By Zii at 2018/5/3.
@@ -91,7 +91,7 @@ class GuideView extends FrameLayout {
           && hightLight.getTips() != null
           && hightLight.getTips().layoutRes != -1) {
 
-        addTipsView(hightLight.getTips());
+        addTipsView(hightLight.getTips(), hightLight.getRectF());
       }
     }
   }
@@ -140,25 +140,48 @@ class GuideView extends FrameLayout {
     }
   }
 
-  public void addTipsView(Tips tips) {
+  public void addTipsView(Tips tips, RectF hlRectF) {
     View tipsView = LayoutInflater.from(getContext()).inflate(tips.layoutRes, this, false);
+    int tipsWidth = GuideUtils.getMeasuredWidth(tipsView);
+    Margin margin = tips.margin == null ? new Margin(0, 0, 0, 0) : tips.margin;
 
     LayoutParams lp = (LayoutParams) tipsView.getLayoutParams();
 
-    lp.leftMargin = tips.leftMargin;
-    lp.topMargin = tips.topMargin;
-    lp.rightMargin = tips.rightMargin;
-    lp.bottomMargin = tips.bottomMargin;
-
-    if (lp.rightMargin != 0) {
-      lp.gravity = Gravity.END;
-    } else {
-      lp.gravity = Gravity.START;
-    }
-    if (lp.bottomMargin != 0) {
-      lp.gravity |= Gravity.BOTTOM;
-    } else {
-      lp.gravity |= Gravity.TOP;
+    switch (tips.to) {
+      case Tips.TO_LEFT_OF:
+        lp.leftMargin = (int) (hlRectF.left - tipsWidth - margin.right);
+        switch (tips.align) {
+          case Tips.ALIGN_BOTTOM:
+            lp.topMargin = (int) (hlRectF.bottom + margin.top);
+            break;
+          case Tips.ALIGN_TOP:
+            lp.topMargin = (int) (hlRectF.top + margin.top);
+            break;
+          default:
+            lp.topMargin = margin.top;
+            break;
+        }
+        break;
+      case Tips.TO_RIGHT_OF:
+        lp.leftMargin = (int) (hlRectF.right + margin.left);
+        switch (tips.align) {
+          case Tips.ALIGN_BOTTOM:
+            lp.topMargin = (int) (hlRectF.bottom + margin.top);
+            break;
+          case Tips.ALIGN_TOP:
+            lp.topMargin = (int) (hlRectF.top + margin.top);
+            break;
+          default:
+            lp.topMargin = margin.top;
+            break;
+        }
+        break;
+      default:
+        lp.leftMargin = margin.left;
+        lp.topMargin = margin.top;
+        lp.rightMargin = margin.right;
+        lp.bottomMargin = margin.bottom;
+        break;
     }
 
     tipsView.setLayoutParams(lp);
